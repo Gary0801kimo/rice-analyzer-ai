@@ -1,19 +1,27 @@
 const OpenAI = require("openai");
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 exports.handler = async (event) => {
   try {
-    const { image } = JSON.parse(event.body);
+    const body = JSON.parse(event.body);
+    const { imageBase64 } = body;
+
+    if (!imageBase64) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "No image provided" }),
+      };
+    }
 
     const response = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [
         {
           role: "system",
-          content: "你是一位專業的稻米品質鑑定師，請依據 CNS 國家標準，分析圖片中稻米的品質，說明是否為優質、一般、中等或劣等，並給出品質評分表與摘要。"
+          content: "你是一位農業品管專家，根據圖像來判斷稻米品質，請依照台灣或日本的稻米品質規範，從色澤、完整度、飽滿度、是否有異物、破碎比例等方面分析，並列出優質、中等、劣質的特徵。請使用繁體中文回覆，並以表格方式呈現。",
         },
         {
           role: "user",
@@ -21,41 +29,25 @@ exports.handler = async (event) => {
             {
               type: "image_url",
               image_url: {
-                url: `data:image/jpeg;base64,${image}`,
-                detail: "low"
-              }
-            }
-          ]
-        }
+                url: imageBase64,
+              },
+            },
+          ],
+        },
       ],
-      temperature: 0.2,
-      max_tokens: 1000
+      temperature: 0.5,
     });
-
-    const content = response.choices[0].message.content;
-
-    // 模擬簡單的結構解析（實際需更嚴謹 parser）
-    const mockResult = {
-      summary: content.split("\n")[0],
-      details: [
-        { name: "整體飽滿度", value: "92%", standard: "≧90%", comment: "達優質水準" },
-        { name: "黃粒比例", value: "1.2%", standard: "≦2%", comment: "低於上限，屬正常" },
-        { name: "破碎粒比例", value: "0.5%", standard: "≦1%", comment: "良好" }
-      ],
-      marks: [
-        { x: 80, y: 90, type: "優質" },
-        { x: 130, y: 100, type: "中等" }
-      ]
-    };
 
     return {
       statusCode: 200,
-      body: JSON.stringify(mockResult)
+      body: JSON.stringify({
+        result: response.choices[0].message.content,
+      }),
     };
   } catch (err) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Vision 分析失敗", detail: err.message })
+      body: JSON.stringify({ error: "分析錯誤", details: err.message }),
     };
   }
 };
