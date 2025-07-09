@@ -1,36 +1,28 @@
-const OpenAI = require("openai");
+const OpenAI = require('openai');
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-exports.handler = async (event) => {
+exports.handler = async function(event, context) {
   try {
-    const body = JSON.parse(event.body);
-    const { imageBase64 } = body;
-    if (!imageBase64) {
-      return { statusCode: 400, body: JSON.stringify({ error: "No image provided" }) };
-    }
-
+    const { imageBase64 } = JSON.parse(event.body);
     const response = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "system",
-          content: "你是一位稻米品質鑑定專家，請依照台灣國家稻米品質標準（如色澤、碎米比例、透明度、異物、蟲蛀、發霉）對圖片中稻米進行檢測，並標示優質區域（綠圈）與中劣區域（紅圈），並提供分析結果以表格格式呈現，並依據各項標準給出總評：優質、中等或劣等。"
+      model: 'gpt-4o',
+      messages: [{
+        role: 'user',
+        content: [{
+          type: 'image_url',
+          image_url: { url: imageBase64 }
         },
-        {
-          role: "user",
-          content: [{ type: "image_url", image_url: { url: imageBase64 } }]
-        }
-      ]
+        { type: 'text', text: '請以國家稻米品質分級規範，分析此稻米照片中的碎米比例、色澤、透明度、異物含量，並給出表格與整體等級建議，並標記優質區域（綠圈）、中等與劣質區域（紅圈）。' }]
+      }],
     });
-
     return {
       statusCode: 200,
-      body: JSON.stringify({ result: response.choices[0].message.content })
+      body: JSON.stringify(response.choices[0].message)
     };
   } catch (err) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "分析失敗", details: err.message })
+      body: JSON.stringify({ error: err.message })
     };
   }
 };
