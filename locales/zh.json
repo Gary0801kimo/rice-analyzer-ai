@@ -1,0 +1,8 @@
+{
+  "upload": "上傳稻米照片",
+  "analysis": "AI 分析結果",
+  "report": "報告下載",
+  "download": "下載報告",
+  "loading": "分析中...",
+  "error": "發生錯誤，請重新上傳圖片。"
+}
