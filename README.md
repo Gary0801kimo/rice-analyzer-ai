@@ -1,3 +1,12 @@
-# 米寶寶 AI 鑑米師 rice-analyzer-v2
+# 米寶寶 AI 鑑米師
 
-使用 GPT Vision 技術對稻米品質進行分析，標註優質、中等與劣質區塊，並輸出精美 PDF 報告。
+功能：圖片上傳、GPT-4o 分析、繁體 UI、稻田背景。
+
+## 開發啟動
+```
+npm install
+npm run dev
+```
+
+## 部署至 Netlify
+- 在 Netlify dashboard 設定環境變數：`OPENAI_API_KEY`
