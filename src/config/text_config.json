@@ -2,16 +2,17 @@
 {
   "upload_card": {
     "title": "上傳照片",
-    "button": "上傳",
+    "button": "選擇圖片",
     "description": "請選擇一張稻米影像進行分析"
   },
   "analysis_card": {
     "title": "AI 分析",
+    "button": "開始分析",
     "description": "分析結果將顯示於下方"
   },
   "report_card": {
     "title": "匯出報告",
-    "button": "下載",
+    "button": "下載 PDF",
     "description": "產出稻米品質報告 PDF"
   }
 }

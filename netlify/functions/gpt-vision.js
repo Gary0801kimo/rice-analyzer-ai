@@ -1,16 +1,12 @@
 
 import OpenAI from "openai";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export default async (req, res) => {
   try {
     const { imageBase64 } = req.body;
-    if (!imageBase64) {
-      return res.status(400).json({ error: "Missing imageBase64" });
-    }
+    if (!imageBase64) return res.status(400).json({ error: "Missing imageBase64" });
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o",
@@ -26,10 +22,8 @@ export default async (req, res) => {
       max_tokens: 1000
     });
 
-    const result = completion.choices?.[0]?.message?.content;
-    return res.status(200).json({ result });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "分析失敗", detail: err.message });
+    return res.status(200).json({ result: completion.choices[0].message.content });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
   }
 };

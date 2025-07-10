@@ -1,12 +1,9 @@
-# 米寶寶 AI 鑑米師
+# 米寶寶 AI 鑑米師（互動版）
 
-功能：圖片上傳、GPT-4o 分析、繁體 UI、稻田背景。
+包含圖片上傳、GPT 分析、顯示結果。
 
-## 開發啟動
-```
+## 使用方式
+```bash
 npm install
 npm run dev
 ```
-
-## 部署至 Netlify
-- 在 Netlify dashboard 設定環境變數：`OPENAI_API_KEY`
