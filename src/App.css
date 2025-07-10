@@ -1,37 +1,33 @@
-.app {
+
+body, html {
+  margin: 0; padding: 0;
   font-family: "Noto Sans TC", sans-serif;
-  min-height: 100vh;
+}
+.app {
   background-size: cover;
-  background-position: center;
-  padding: 40px 20px;
+  min-height: 100vh;
+  padding: 30px;
   text-align: center;
 }
-.title {
-  font-size: 28px;
-  margin-bottom: 30px;
-}
-.card-container {
+.cards {
   display: flex;
-  justify-content: center;
   flex-wrap: wrap;
-  gap: 24px;
+  justify-content: center;
+  gap: 20px;
 }
 .card {
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 16px;
-  padding: 24px;
-  width: 240px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 260px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
-.icon {
-  font-size: 32px;
-  margin-bottom: 12px;
-}
-button {
-  margin-top: 12px;
-  padding: 8px 16px;
-  background-color: #d0eaa1;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
+.result {
+  margin-top: 40px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 }
