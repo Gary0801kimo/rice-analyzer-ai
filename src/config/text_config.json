@@ -1,0 +1,17 @@
+{
+  "upload_card": {
+    "title": "上傳照片",
+    "button": "上傳",
+    "description": "選擇稻米影像後進行上傳"
+  },
+  "analysis_card": {
+    "title": "AI 分析",
+    "button": "",
+    "description": "正在分析中..."
+  },
+  "report_card": {
+    "title": "匯出報告",
+    "button": "下載",
+    "description": "下載分析結果報告"
+  }
+}
