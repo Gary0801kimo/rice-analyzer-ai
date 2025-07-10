@@ -1,28 +1,44 @@
-const OpenAI = require('openai');
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+import OpenAI from "openai";
 
-exports.handler = async function(event, context) {
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
+
+export default async (req, res) => {
   try {
-    const { imageBase64 } = JSON.parse(event.body);
+    const { imageBase64 } = req.body;
+
+    if (!imageBase64) {
+      return res.status(400).json({ error: "Missing imageBase64 in request body." });
+    }
+
     const response = await openai.chat.completions.create({
-      model: 'gpt-4o',
-      messages: [{
-        role: 'user',
-        content: [{
-          type: 'image_url',
-          image_url: { url: imageBase64 }
-        },
-        { type: 'text', text: '請以國家稻米品質分級規範，分析此稻米照片中的碎米比例、色澤、透明度、異物含量，並給出表格與整體等級建議，並標記優質區域（綠圈）、中等與劣質區域（紅圈）。' }]
-      }],
+      model: "gpt-4o",
+      messages: [
+        {
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: "請幫我分析這張稻米品質，依據台灣國家標準分類為優質、中等、劣質，並指出各區位置。"
+            },
+            {
+              type: "image_url",
+              image_url: {
+                url: imageBase64
+              }
+            }
+          ]
+        }
+      ],
+      max_tokens: 1000
     });
-    return {
-      statusCode: 200,
-      body: JSON.stringify(response.choices[0].message)
-    };
-  } catch (err) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: err.message })
-    };
+
+    const result = response.choices?.[0]?.message?.content;
+    return res.status(200).json({ result });
+
+  } catch (error) {
+    console.error("GPT Vision Error:", error);
+    return res.status(500).json({ error: "GPT Vision API 錯誤", detail: error.message });
   }
 };
